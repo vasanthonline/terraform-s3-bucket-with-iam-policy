@@ -22,7 +22,13 @@
                 "iam:GetUser",
                 "iam:CreatePolicyVersion",
                 "iam:DetachUserPolicy",
-                "iam:DeletePolicyVersion"
+                "iam:DeletePolicyVersion",
+                "iam:ListAccessKeys",
+                "iam:ListSSHPublicKeys",
+                "iam:ListVirtualMFADevices",
+                "iam:ListMFADevices",
+                "iam:DeleteLoginProfile",
+                "iam:ListSigningCertificates"
             ],
             "Resource": [
                 "arn:aws:iam::000000000000:role/ci-cd-role",
