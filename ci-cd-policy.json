@@ -1,0 +1,60 @@
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Sid": "VisualEditor0",
+            "Effect": "Allow",
+            "Action": [
+                "iam:GetPolicyVersion",
+                "iam:GetPolicy",
+                "iam:UpdateUser",
+                "iam:AttachUserPolicy",
+                "iam:DeletePolicy",
+                "iam:AttachRolePolicy",
+                "iam:DeleteUser",
+                "iam:CreateUser",
+                "iam:CreatePolicy",
+                "iam:DetachRolePolicy",
+                "iam:ListPolicyVersions",
+                "iam:ListGroupsForUser",
+                "iam:ListAttachedRolePolicies",
+                "iam:ListAttachedUserPolicies",
+                "iam:GetUser",
+                "iam:CreatePolicyVersion",
+                "iam:DetachUserPolicy",
+                "iam:DeletePolicyVersion"
+            ],
+            "Resource": [
+                "arn:aws:iam::000000000000:role/ci-cd-role",
+                "arn:aws:iam::000000000000:user/*",
+                "arn:aws:iam::000000000000:policy/*"
+            ]
+        },
+        {
+            "Sid": "VisualEditor1",
+            "Effect": "Allow",
+            "Action": [
+                "iam:ListPolicies",
+                "s3:GetLifecycleConfiguration",
+                "s3:GetBucketTagging",
+                "s3:GetBucketWebsite",
+                "s3:GetBucketLogging",
+                "s3:CreateBucket",
+                "s3:ListBucket",
+                "s3:GetAccelerateConfiguration",
+                "s3:GetBucketVersioning",
+                "s3:GetBucketAcl",
+                "s3:GetBucketPolicy",
+                "s3:GetReplicationConfiguration",
+                "s3:GetBucketObjectLockConfiguration",
+                "s3:GetEncryptionConfiguration",
+                "s3:ListAllMyBuckets",
+                "s3:PutBucketTagging",
+                "s3:GetBucketRequestPayment",
+                "s3:GetBucketCORS",
+                "s3:DeleteBucket"
+            ],
+            "Resource": "*"
+        }
+    ]
+}

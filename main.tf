@@ -12,6 +12,9 @@ terraform {
 provider "aws" {
   profile = "personal"
   region  = "us-east-1"
+  assume_role {
+    role_arn = "arn:aws:iam::000000000000:role/ci-cd-role"
+  }
 }
 
 resource "aws_s3_bucket" "example" {
@@ -56,14 +59,20 @@ resource "aws_iam_policy" "policy" {
 EOF
 }
 
-resource "aws_iam_user_policy_attachment" "attach-user-to-policy" {
-  user       = "vasanth"
+resource "aws_iam_user" "user" {
+  name = "${var.bucket_name}-bucket-user"
+  force_destroy = true
+}
+
+resource "aws_iam_user_policy_attachment" "attach-policy-to-user" {
+  user = "${var.bucket_name}-bucket-user"
   policy_arn = aws_iam_policy.policy.arn
 }
 
 
 variable "bucket_name" {
   type = string
+  default = "sample-bucket-via-tf"
 
   validation {
     condition     = can(regex("^sample-bucket-", var.bucket_name))
