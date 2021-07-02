@@ -46,7 +46,8 @@ resource "aws_iam_policy" "policy" {
         "s3:GetBucketAcl",
         "s3:GetBucketPolicy",
         "s3:GetObjectVersion",
-        "s3:ListMultipartUploadParts"
+        "s3:ListMultipartUploadParts",
+        "s3:PutBucketPolicy"
       ],
       "Effect": "Allow",
       "Resource": [
@@ -59,14 +60,38 @@ resource "aws_iam_policy" "policy" {
 EOF
 }
 
-resource "aws_iam_user" "user" {
-  name = "${var.bucket_name}-bucket-user"
-  force_destroy = true
+resource "aws_iam_role_policy_attachment" "attach-policy-to-role" {
+  role = "ci-cd-role"
+  policy_arn = aws_iam_policy.policy.arn
 }
 
-resource "aws_iam_user_policy_attachment" "attach-policy-to-user" {
-  user = "${var.bucket_name}-bucket-user"
-  policy_arn = aws_iam_policy.policy.arn
+resource "aws_s3_bucket_policy" "example_bucket_policy" {
+  bucket = aws_s3_bucket.example.id
+  depends_on = [aws_s3_bucket.example, aws_iam_policy.policy]
+
+  # Terraform's "jsonencode" function converts a
+  # Terraform expression's result to valid JSON syntax.
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Id      = "${var.bucket_name}-bucket-policy"
+    Statement = [
+      {
+        Sid       = "IPAllow"
+        Effect    = "Deny"
+        Principal = "*"
+        Action    = "s3:*"
+        Resource = [
+          aws_s3_bucket.example.arn,
+          "${aws_s3_bucket.example.arn}/*",
+        ]
+        Condition = {
+          IpAddress = {
+            "aws:SourceIp" = "8.8.8.8/32"
+          }
+        }
+      },
+    ]
+  })
 }
 
 
