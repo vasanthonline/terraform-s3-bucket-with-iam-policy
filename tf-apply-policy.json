@@ -5,7 +5,13 @@
             "Sid": "VisualEditor0",
             "Effect": "Allow",
             "Action": "sts:AssumeRole",
-            "Resource": "arn:aws:iam::000000000000:role/ci-cd-role"
+            "Resource": "arn:aws:iam::000000000000:role/ci-cd-role",
+            "Condition": {
+                "StringEquals": {
+                    "sts:ExternalId": "ci-cd-pipeline",
+                    "aws:PrincipalAccount": "000000000000"
+                }
+            }
         }
     ]
 }

@@ -46,8 +46,7 @@ resource "aws_iam_policy" "policy" {
         "s3:GetBucketAcl",
         "s3:GetBucketPolicy",
         "s3:GetObjectVersion",
-        "s3:ListMultipartUploadParts",
-        "s3:PutBucketPolicy"
+        "s3:ListMultipartUploadParts"
       ],
       "Effect": "Allow",
       "Resource": [
@@ -67,28 +66,24 @@ resource "aws_iam_role_policy_attachment" "attach-policy-to-role" {
 
 resource "aws_s3_bucket_policy" "example_bucket_policy" {
   bucket = aws_s3_bucket.example.id
-  depends_on = [aws_s3_bucket.example, aws_iam_policy.policy]
 
-  # Terraform's "jsonencode" function converts a
-  # Terraform expression's result to valid JSON syntax.
+
   policy = jsonencode({
     Version = "2012-10-17"
     Id      = "${var.bucket_name}-bucket-policy"
     Statement = [
       {
-        Sid       = "IPAllow"
-        Effect    = "Deny"
-        Principal = "*"
-        Action    = "s3:*"
+        Effect    = "Allow"
+        Action    = [
+          "s3:PutObject",
+        ],
+        Principal = {
+            "AWS": "arn:aws:iam::000000000000:role/ci-cd-role"
+        }
         Resource = [
-          aws_s3_bucket.example.arn,
+          "${aws_s3_bucket.example.arn}",
           "${aws_s3_bucket.example.arn}/*",
         ]
-        Condition = {
-          IpAddress = {
-            "aws:SourceIp" = "8.8.8.8/32"
-          }
-        }
       },
     ]
   })

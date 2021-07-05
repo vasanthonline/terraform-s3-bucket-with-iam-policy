@@ -58,9 +58,16 @@
                 "s3:PutBucketTagging",
                 "s3:GetBucketRequestPayment",
                 "s3:GetBucketCORS",
-                "s3:DeleteBucket"
+                "s3:DeleteBucket",
+                "s3:PutBucketPolicy",
+                "s3:DeleteBucketPolicy"
             ],
-            "Resource": "*"
+            "Resource": "*",
+            "Condition": {
+                "StringEquals": {
+                    "aws:PrincipalTag/access-to-ci-cd": "true"
+                }
+            }
         }
     ]
 }
